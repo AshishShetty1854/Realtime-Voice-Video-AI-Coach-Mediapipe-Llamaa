@@ -1,0 +1,89 @@
+# =========================================================
+# AI Real-Time Gym Coach - .gitignore
+# =========================================================
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Environment variables
+.env
+.env.*
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# SQLite database
+*.sqlite3
+db.sqlite3
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Media / uploads
+uploads/
+output/
+results/
+generated/
+static/generated/
+
+# Model weights
+*.pth
+*.pt
+*.onnx
+checkpoints/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Cache
+.cache/
+
+# Runtime files
+*.pid
+*.seed
+
+# Package managers
+node_modules/
+
+# Docker
+docker-compose.override.yml
+
+# Render / deployment
+.render/
+
+# Misc
+*.bak
+*.swp
