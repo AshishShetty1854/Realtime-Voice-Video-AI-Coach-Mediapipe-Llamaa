@@ -17,7 +17,6 @@ load_dotenv()
 from services.coaching.llm import LLMCoach
 from services.coaching.tts import TextToSpeech
 from services.coaching.voice_pipeline import VoicePipeline, autoplay_audio
-from streamlit_webrtc import RTCConfiguration
 
   
 def main():
@@ -204,22 +203,7 @@ def main():
             key="exercise-analysis",
             mode=WebRtcMode.SENDRECV,
             video_processor_factory=VideoProcessorClass,
-            rtc_configuration={
-    "iceServers": [
-        {
-            "urls": ["stun:stun.l.google.com:19302"]
-        },
-        {
-            "urls": [
-                "turn:openrelay.metered.ca:80",
-                "turn:openrelay.metered.ca:443",
-                "turn:openrelay.metered.ca:443?transport=tcp"
-            ],
-            "username": "openrelayproject",
-            "credential": "openrelayproject"
-        }
-    ]
-},
+            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
             media_stream_constraints={
                 "video": True,
                 "audio": False
