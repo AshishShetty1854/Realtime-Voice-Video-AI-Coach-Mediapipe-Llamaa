@@ -1,6 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
-
 import streamlit as st
 import os
 import time
@@ -15,11 +12,13 @@ from services.vision.exercise_video_processor import VideoProcessorClass
 from services.tracking.metrics import sync_metrics_update
 from services.persistence.exercise_repository import get_users_exercises
 from groq import Groq
+from dotenv import load_dotenv
+load_dotenv()
 from services.coaching.llm import LLMCoach
 from services.coaching.tts import TextToSpeech
 from services.coaching.voice_pipeline import VoicePipeline, autoplay_audio
 
-
+  
 def main():
     st.set_page_config(
         page_icon="🏋️‍♀️",
@@ -34,7 +33,7 @@ def main():
     init_db()
 
     if not render_login_wall():
-        return
+        return 
 
     initial_session_defaults()
 
@@ -44,7 +43,7 @@ def main():
 
             if not api_key and hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
                 api_key = st.secrets["GROQ_API_KEY"]
-
+            
             groq_client = Groq(api_key=api_key)
             llm_coach = LLMCoach(groq_client)
             tts = TextToSpeech()
@@ -53,7 +52,7 @@ def main():
             st.session_state.voice_pipeline = None
 
     workout_started = st.session_state.get("workout_started", False)
-
+    
     with st.sidebar:
         st.title("🏋️‍♂️ Apna AI Coach")
 
@@ -90,7 +89,7 @@ def main():
                         exercise=plan_exercise,
                         metrics={}
                     )
-
+                    
                     if result:
                         st.session_state.audio_to_play, st.session_state.coach_feedback = result
 
@@ -108,7 +107,7 @@ def main():
 
             if end_session_button:
                 st.session_state.workout_started = False
-
+                
                 if st.session_state.voice_pipeline:
                     result = st.session_state.voice_pipeline.process_event(
                         event="workout_completed",
@@ -170,7 +169,7 @@ def main():
 
     st.title("AI Real-time GYM Coach")
     st.markdown("#### Real-time pose detection with proactive AI voice coaching")
-
+ 
     if st.session_state.get("audio_to_play"):
         autoplay_audio(st.session_state.audio_to_play)
 
@@ -200,34 +199,16 @@ def main():
             unsafe_allow_html=True,
         )
     else:
-        try:
-            turn_username = st.secrets.get("TURN_USERNAME")
-            turn_credential = st.secrets.get("TURN_CREDENTIAL")
-        except Exception:
-            turn_username = None
-            turn_credential = None
-
-        turn_username = turn_username or os.environ.get("TURN_USERNAME")
-        turn_credential = turn_credential or os.environ.get("TURN_CREDENTIAL")
-
         context = webrtc_streamer(
             key="exercise-analysis",
             mode=WebRtcMode.SENDRECV,
             video_processor_factory=VideoProcessorClass,
-            rtc_configuration={
-    "iceServers": [
-        {
-            "urls": ["turn:openrelay.metered.ca:443?transport=tcp"],
-            "username": turn_username,
-            "credential": turn_credential,
-        },
-    ]
-},
+            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
             media_stream_constraints={
                 "video": True,
                 "audio": False
             },
-            async_processing=True,
+            async_processing=True
         )
 
         sync_metrics_update(context)
@@ -275,3 +256,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
